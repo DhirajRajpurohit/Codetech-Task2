@@ -1,0 +1,108 @@
+create database hotel;
+use hotel;
+
+CREATE TABLE Rooms (
+    RoomID INT AUTO_INCREMENT PRIMARY KEY,
+    RoomNumber INT UNIQUE,
+    RoomType VARCHAR(50),
+    PricePerNight DECIMAL(10, 2),
+    Status VARCHAR(50)
+);
+
+CREATE TABLE Customers (
+    CustomerID INT AUTO_INCREMENT PRIMARY KEY,
+    FirstName VARCHAR(100),
+    LastName VARCHAR(100),
+    Email VARCHAR(255),
+    PhoneNumber VARCHAR(20),
+    Address VARCHAR(255)
+);
+
+CREATE TABLE Reservations (
+    ReservationID INT AUTO_INCREMENT PRIMARY KEY,
+    RoomID INT,
+    CustomerID INT,
+    CheckInDate DATE,
+    CheckOutDate DATE,
+    TotalPrice DECIMAL(10, 2),
+    Status VARCHAR(50),
+    FOREIGN KEY (RoomID) REFERENCES Rooms(RoomID),
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+CREATE TABLE Payments (
+    PaymentID INT AUTO_INCREMENT PRIMARY KEY,
+    ReservationID INT,
+    PaymentDate DATE,
+    Amount DECIMAL(10, 2),
+    PaymentMethod VARCHAR(50),
+    FOREIGN KEY (ReservationID) REFERENCES Reservations(ReservationID)
+);
+
+-- Insert into Rooms
+INSERT INTO Rooms (RoomNumber, RoomType, PricePerNight, Status)
+VALUES (101, 'Single', 100.00, 'Available');
+
+-- Insert into Customers
+INSERT INTO Customers (FirstName, LastName, Email, PhoneNumber, Address)
+VALUES ('Alice', 'Smith', 'Dhiraj.raj@example.com', '555-6789', '123 Main St');
+
+-- Insert into Reservations
+INSERT INTO Reservations (RoomID, CustomerID, CheckInDate, CheckOutDate, TotalPrice, Status)
+VALUES (1, 1, '2024-08-01', '2024-08-05', 400.00, 'Confirmed');
+
+-- Insert into Payments
+INSERT INTO Payments (ReservationID, PaymentDate, Amount, PaymentMethod)
+VALUES (1, '2024-07-31', 400.00, 'Credit Card');
+ 
+ 
+-- Update room status
+UPDATE Rooms
+SET Status = 'Booked'
+WHERE RoomID = 1;
+
+-- Update customer information
+UPDATE Customers
+SET PhoneNumber = '555-9876'
+WHERE CustomerID = 1;
+
+-- Update reservation status
+UPDATE Reservations
+SET Status = 'Cancelled'
+WHERE ReservationID = 1;
+
+-- Update payment amount
+UPDATE Payments
+SET Amount = 350.00
+WHERE PaymentID = 1;
+
+
+-- Get all rooms
+SELECT * FROM Rooms;
+
+-- Get all customers
+SELECT * FROM Customers;
+
+-- Get all reservations
+SELECT * FROM Reservations;
+
+-- Get all payments
+SELECT * FROM Payments;
+
+-- Get all reservations for a specific customer
+SELECT * FROM Reservations
+WHERE CustomerID = 1;
+
+-- Get the total payments made for a specific reservation
+SELECT SUM(Amount) AS TotalPaid
+FROM Payments
+WHERE ReservationID = 1;
+
+-- Get available rooms for a specific date range
+SELECT * FROM Rooms
+WHERE RoomID NOT IN (
+    SELECT RoomID
+    FROM Reservations
+    WHERE CheckInDate <= '2024-08-05' AND CheckOutDate >= '2024-08-01'
+)
+AND Status = 'Available';
