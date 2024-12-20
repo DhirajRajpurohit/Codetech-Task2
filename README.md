@@ -44,7 +44,7 @@ Handling Complex Queries:
 Writing complex SQL queries to check room availability, retrieve customer reservations, and analyze payment data.
 
 **Technologies Used:**
-MySQL (or any RDBMS):
+MySQL (or any RDBMS) and Java:
 
 Database management system for storing and managing all booking-related data.
 SQL:
